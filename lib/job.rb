@@ -2,11 +2,15 @@ require 'yaml'
 
 class Pipeline
   class Job
-    def initialize
-      @plan = Array.new
-      @gets = Array.new
-      @puts = Array.new
-      @tasks = Array.new
+    def initialize(name, plan)
+      @job = {
+        "name" => name,
+        "plan" => plan
+      }
+    end
+
+    def get_hash
+      @job
     end
   end
 end
