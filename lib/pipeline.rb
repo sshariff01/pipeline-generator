@@ -36,6 +36,16 @@ class Pipeline
     end
   end
 
+  def finalize
+    output=output_file
+    output.puts(@pipeline.to_yaml)
+    output.close
+  end
+
+  def output_file(filename='generated_pipeline.yml')
+    File.open(filename, "w")
+  end
+
   def get_hash
     @pipeline
   end

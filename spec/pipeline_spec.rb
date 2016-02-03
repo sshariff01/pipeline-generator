@@ -90,4 +90,13 @@ describe Pipeline do
       ])
     end
   end
+
+  it "successfully writes the pipeline to output stream in YAML" do
+    file = StringIO.new
+    allow(File).to receive(:open) { file }
+
+    pipeline.finalize
+
+    expect(file.string).to eq("---\n- groups:\n  - name: all\n    jobs: []\n- resources: []\n- jobs: []\n")
+  end
 end
