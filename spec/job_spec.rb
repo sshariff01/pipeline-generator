@@ -1,16 +1,27 @@
 require 'spec_helper'
 require 'rspec'
-require 'job'
+require 'plan'
 
-describe Job do
-  subject(:job) { Job.new }
+describe Pipeline::Job do
+  subject(:job) { Pipeline::Job.new }
+  let(:job_name) { 'job-to-add' }
+  let(:valid_plan) {
+    [[{"task"=>"task-to-add", "config"=>{"platform"=>"some-platform", "image"=>"some-image", "run"=>{}}}]]
+  }
 
-  context "when getting a resource" do
-    it "successfully inserts YAML to the job with keys: get" do
-      resource_name = 'some-resource'
-      job.get(resource_name)
-      expect(job).to eq(Hash.new)
+  context "when defining a job to the pipeline" do
+    it "successfully generates the YAML for a job with valid key-values: name, plan" do
+      plan.add_get(resource_name)
+
+      expect(plan.get_hash).to eq([[{"get"=>"some-resource"}]])
     end
   end
-
 end
+
+# name: string
+# serial: boolean
+# serial_groups: [string]
+# max_in_flight: integer
+# public: boolean
+# plan: [step]
+#

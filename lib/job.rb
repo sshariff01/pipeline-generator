@@ -1,12 +1,12 @@
 require 'yaml'
 
-class Job
-  def initialize
-    @job = Hash.new
+class Pipeline
+  class Job
+    def initialize
+      @plan = Array.new
+      @gets = Array.new
+      @puts = Array.new
+      @tasks = Array.new
+    end
   end
-
-  def get(resource_name, passed=nil, trigger=false, params=nil)
-
-  end
-
 end
