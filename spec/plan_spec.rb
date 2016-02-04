@@ -20,6 +20,7 @@ describe Pipeline::Job::Plan do
   let(:put_resource_hash) {
     {
       "put" => "dummy-resource-name",
+      "resource" => "dummy",
       "params" => {
           'first-key' => 'first-val',
           'second-key' => 'second-val'
@@ -53,9 +54,17 @@ describe Pipeline::Job::Plan do
 
       plan.add_get(resource)
 
+      expect(resource.get_hash).to have_key("passed")
+      expect(resource.get_hash).to have_key("trigger")
       expect(plan.get_hash).to eq([
         {
-          "get"=> "dummy-resource-name",
+          "get" => "dummy-resource-name",
+          "passed" => ['passed-some-job'],
+          "trigger" => true,
+          "params" => {
+              'first-key' => 'first-val',
+              'second-key' => 'second-val'
+          }
         }
       ])
     end
@@ -63,13 +72,15 @@ describe Pipeline::Job::Plan do
 
   context "when defining a put resource" do
     it "successfully inserts the put resource to the plan" do
-      allow(resource).to receive(:put_hash) { put_resource_hash }
+      allow(resource).to receive(:get_hash) { put_resource_hash }
 
       plan.add_put(resource)
 
+      expect(resource.get_hash).to have_key("resource")
       expect(plan.get_hash).to eq([
         {
           "put" => "dummy-resource-name",
+          "resource" => "dummy",
           "params" => {
               'first-key' => 'first-val',
               'second-key' => 'second-val'
