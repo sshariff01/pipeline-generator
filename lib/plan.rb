@@ -1,6 +1,9 @@
 class Pipeline
   class Job
     class Plan
+
+      class ImproperArgFormatError < StandardError; end
+
       def initialize
         @plan = []
       end
@@ -15,6 +18,16 @@ class Pipeline
 
       def add_task(task)
         @plan << task.get_hash
+      end
+
+      def add_tasks(tasks)
+        begin
+          tasks.each do |task|
+            @plan << task.get_hash
+          end
+        rescue
+          raise ImproperArgFormatError
+        end
       end
 
       def get_hash

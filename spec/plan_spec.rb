@@ -6,6 +6,7 @@ describe Pipeline::Job::Plan do
   subject(:plan) { Pipeline::Job::Plan.new }
   let(:resource) { double('resource') }
   let(:task) { double('task') }
+  let(:task2) { double('task') }
   let(:get_resource_hash) {
     {
       "get" => "dummy-resource-name",
@@ -78,6 +79,21 @@ describe Pipeline::Job::Plan do
       plan.add_task(task)
 
       expect(plan.get_hash).to eq([task_hash])
+    end
+
+    it "successfully inserts more than one task to the plan with keys: get, passed, trigger, params: task name, config" do
+      allow(task).to receive(:get_hash) { task_hash }
+      allow(task2).to receive(:get_hash) { task_hash }
+
+      plan.add_tasks([task, task2])
+
+      expect(plan.get_hash).to eq([task_hash, task_hash])
+    end
+
+    it "fails to inserts more than one task if arg is not an array" do
+      allow(task).to receive(:get_hash) { task_hash }
+
+      expect{plan.add_tasks("garbage")}.to raise_error(Pipeline::Job::Plan::ImproperArgFormatError)
     end
   end
 end
