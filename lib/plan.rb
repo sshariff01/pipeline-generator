@@ -1,5 +1,3 @@
-require 'yaml'
-
 class Pipeline
   class Job
     class Plan
