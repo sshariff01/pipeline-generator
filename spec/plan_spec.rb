@@ -56,12 +56,6 @@ describe Pipeline::Job::Plan do
       expect(plan.get_hash).to eq([
         {
           "get"=> "dummy-resource-name",
-          "passed" => ['passed-some-job'],
-          "trigger" => true,
-          "params" => {
-              'first-key' => 'first-val',
-              'second-key' => 'second-val'
-          }
         }
       ])
     end

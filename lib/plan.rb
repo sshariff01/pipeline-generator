@@ -6,7 +6,7 @@ class Pipeline
       end
 
       def add_get(resource)
-        @plan << resource.get_hash
+        @plan << get_resource(resource)
       end
 
       def add_put(resource)
@@ -19,6 +19,14 @@ class Pipeline
 
       def get_hash
         @plan
+      end
+
+      private
+
+      def get_resource(resource)
+        {
+          "get" => resource.get_hash["get"]
+        }
       end
     end
   end
