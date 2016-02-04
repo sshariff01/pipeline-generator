@@ -4,66 +4,67 @@ require 'plan'
 
 describe Pipeline::Job::Plan do
   subject(:plan) { Pipeline::Job::Plan.new }
-  let(:resource_name) { 'some-resource' }
+  let(:resource) { double('resource') }
+  let(:get_resource_hash) {
+    {
+      "get" => "dummy-resource-name",
+      "passed" => ['passed-some-job'],
+      "trigger" => true,
+      "params" => {
+          'first-key' => 'first-val',
+          'second-key' => 'second-val'
+      }
+    }
+  }
+  let(:put_resource_hash) {
+    {
+      "put" => "dummy-resource-name",
+      "params" => {
+          'first-key' => 'first-val',
+          'second-key' => 'second-val'
+      }
+    }
+  }
 
   context "when defining a get resource" do
-    it "successfully inserts the get to the plan with keys: get" do
-      plan.add_get(resource_name)
+    it "successfully inserts the get resource to the plan" do
+      allow(resource).to receive(:get_hash) { get_resource_hash }
 
-      expect(plan.get_hash).to eq([{"get"=>"some-resource"}])
-    end
+      plan.add_get(resource)
 
-    it "successfully inserts the get to the plan with keys: get, passed" do
-      passed = [ 'some-other-job' ]
-
-      plan.add_get(resource_name, passed)
-
-      expect(plan.get_hash).to eq([{"get"=>"some-resource", "passed"=>["some-other-job"]}])
-    end
-
-    it "successfully inserts the get to the plan with keys: get, passed, trigger, params: get, passed, trigger" do
-      passed = [ 'some-other-job' ]
-      trigger = true
-
-      plan.add_get(resource_name, passed, trigger)
-
-      expect(plan.get_hash).to eq([{"get"=>"some-resource", "passed"=>["some-other-job"], "trigger"=>true}])
-    end
-
-    it "successfully inserts the get to the plan with keys: get, passed, trigger, params" do
-      passed = [ 'some-other-job' ]
-      trigger = true
-      params = {
-        'first-key' => 'first-val',
-        'second-key' => 'second-val'
-      }
-
-      plan.add_get(resource_name, passed, trigger, params)
-
-      expect(plan.get_hash).to eq([{"get"=>"some-resource", "passed"=>["some-other-job"], "trigger"=>true, "params"=>{"first-key"=>"first-val", "second-key"=>"second-val"}}])
+      expect(plan.get_hash).to eq([
+        {
+          "get"=> "dummy-resource-name",
+          "passed" => ['passed-some-job'],
+          "trigger" => true,
+          "params" => {
+              'first-key' => 'first-val',
+              'second-key' => 'second-val'
+          }
+        }
+      ])
     end
   end
 
   context "when defining a put resource" do
-    it "successfully inserts the put to the plan with keys: resource name" do
-      plan.add_put(resource_name)
+    it "successfully inserts the put resource to the plan" do
+      allow(resource).to receive(:put_hash) { put_resource_hash }
 
-      expect(plan.get_hash).to eq([{"put"=>"some-resource"}])
-    end
+      plan.add_put(resource)
 
-    it "successfully inserts the put to the plan with keys: resource name, params" do
-      params = {
-        'first-key' => 'first-val',
-        'second-key' => 'second-val'
-      }
-
-      plan.add_put(resource_name, params)
-
-      expect(plan.get_hash).to eq([{"put"=>"some-resource", "params"=>{"first-key"=>"first-val", "second-key"=>"second-val"}}])
+      expect(plan.get_hash).to eq([
+        {
+          "put" => "dummy-resource-name",
+          "params" => {
+              'first-key' => 'first-val',
+              'second-key' => 'second-val'
+          }
+        }
+      ])
     end
   end
 
-  context "when defining a task" do
+  context "when defining a task(s)" do
     it "successfully inserts the task to the plan with keys: get, passed, trigger, params: task name, config" do
       task_name = 'task-to-add'
       config = {

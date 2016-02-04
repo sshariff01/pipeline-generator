@@ -7,27 +7,19 @@ class Pipeline
       class BadConfigError < StandardError; end
 
       def initialize
-        @plan = Array.new
+        @plan = []
       end
 
-      def add_get(resource_name, passed=nil, trigger=false, params=nil)
-        get = Hash.new
-        get["get"] = resource_name
-        get["passed"] = passed if passed
-        get["trigger"] = trigger if trigger
-        get["params"] = params if !params.nil?
-        @plan << get
+      def add_get(resource)
+        @plan << resource.get_hash
       end
 
-      def add_put(resource_name, params=nil)
-        put = Hash.new
-        put["put"] = resource_name
-        put["params"] = params if !params.nil?
-        @plan << put
+      def add_put(resource)
+        @plan << resource.put_hash
       end
 
       def add_task(task_name, config, privileged=false)
-        task = Hash.new
+        task = {}
         task["task"] = task_name
         task["privileged"] = privileged if privileged
         valid_config(config) ? task["config"] = config : (raise BadConfigError)
