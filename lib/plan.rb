@@ -1,9 +1,6 @@
 class Pipeline
   class Job
     class Plan
-
-      class BadConfigError < StandardError; end
-
       def initialize
         @plan = []
       end
