@@ -5,6 +5,7 @@ require 'plan'
 describe Pipeline::Job::Plan do
   subject(:plan) { Pipeline::Job::Plan.new }
   let(:resource) { double('resource') }
+  let(:task) { double('task') }
   let(:get_resource_hash) {
     {
       "get" => "dummy-resource-name",
@@ -22,6 +23,26 @@ describe Pipeline::Job::Plan do
       "params" => {
           'first-key' => 'first-val',
           'second-key' => 'second-val'
+      }
+    }
+  }
+  let(:task_hash) {
+    {
+      "task" => "dummy-task-name",
+      "privileged" => true,
+      "config" => {
+        'platform' => 'some-platform',
+        'image' => 'some-image',
+        'inputs' => [
+          {
+            'name' => 'input1',
+            'path' => 'input1/path'
+          }
+        ],
+        'run' => {
+          'path' => 'repo/scripts/test',
+          'args' => ['arg0', 'arg1']
+        }
       }
     }
   }
@@ -66,28 +87,30 @@ describe Pipeline::Job::Plan do
 
   context "when defining a task(s)" do
     it "successfully inserts the task to the plan with keys: get, passed, trigger, params: task name, config" do
-      task_name = 'task-to-add'
-      config = {
-        'platform' => 'some-platform',
-        'image' => 'some-image',
-        'run' => {}
-      }
+      allow(task).to receive(:get_hash) { task_hash }
 
-      plan.add_task(task_name, config)
+      plan.add_task(task)
 
-      expect(plan.get_hash).to eq([{"task"=>"task-to-add", "config"=>{"platform"=>"some-platform", "image"=>"some-image", "run"=>{}}}])
-    end
-
-    it "fails to insert the task to the plan and throws an error when a task config is ill defined" do
-      task_name = 'task-to-add'
-      config = {
-        'platform' => 'some-platform',
-        'image' => 'some-image',
-        'missing-run-key' => {}
-      }
-
-      expect{plan.add_task(task_name, config)}.to raise_error(Pipeline::Job::Plan::BadConfigError)
-
+      expect(plan.get_hash).to eq([
+        {
+          "task" => "dummy-task-name",
+          "privileged" => true,
+          "config" => {
+            'platform' => 'some-platform',
+            'image' => 'some-image',
+            'inputs' => [
+              {
+                'name' => 'input1',
+                'path' => 'input1/path'
+              }
+            ],
+            'run' => {
+              'path' => 'repo/scripts/test',
+              'args' => ['arg0', 'arg1']
+            }
+          }
+        }
+      ])
     end
   end
 end

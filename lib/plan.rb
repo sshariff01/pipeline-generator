@@ -18,22 +18,12 @@ class Pipeline
         @plan << resource.put_hash
       end
 
-      def add_task(task_name, config, privileged=false)
-        task = {}
-        task["task"] = task_name
-        task["privileged"] = privileged if privileged
-        valid_config(config) ? task["config"] = config : (raise BadConfigError)
-        @plan << task
+      def add_task(task)
+        @plan << task.get_hash
       end
 
       def get_hash
         @plan
-      end
-
-      private
-
-      def valid_config(config)
-        config["platform"] and config["image"] and config["run"]
       end
     end
   end
