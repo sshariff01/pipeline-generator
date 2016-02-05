@@ -66,5 +66,31 @@ describe Pipeline::Job::Plan::Task do
       expect{task.configure(name, "", "")}.to raise_error(Pipeline::Job::Plan::Task::BadTaskConfigError)
     end
   end
+
+  context 'when defining a task config' do
+    before(:each) do
+      platform = "linux"
+      image = "docker:///ubuntu#14.04"
+      inputs = {
+        "name" => "my-repo",
+        "path" => "path/to/mount",
+      }
+      run = {
+        "path" => "my-repo/scripts/test",
+        "args" => ["arg0", "arg1"]
+      }
+    end
+
+    it "successfully generates the config" do
+      expect(task.generate_config(:platform, :image, :inputs, :run)).to eq(
+        {
+          "platform" => :platform,
+          "image" => :image,
+          "inputs" => :inputs,
+          "run" => :run
+        }
+      )
+    end
+  end
 end
 

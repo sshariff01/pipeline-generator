@@ -17,6 +17,15 @@ class Pipeline
           raise BadTaskConfigError if !@task.has_key? "config" and !@task.has_key? "file"
         end
 
+        def generate_config(platform, image, inputs, run)
+          @task["config"] = {
+            "platform" => platform,
+            "image" => image,
+            "inputs" => inputs,
+            "run" => run
+          }
+        end
+
         def get_hash
           @task
         end
