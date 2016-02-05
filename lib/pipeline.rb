@@ -21,6 +21,12 @@ class Pipeline
 
   def add_job(job)
     @pipeline["jobs"] << job.get_hash
+    @pipeline["groups"].each do |group|
+      if group["name"].eql? "all"
+        group["jobs"] << job.get_hash["name"]
+        break
+      end
+    end
   end
 
   def finalize

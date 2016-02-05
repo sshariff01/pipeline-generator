@@ -62,7 +62,7 @@ describe Pipeline do
       expect(pipeline.get_hash).to eq(
         {
           "groups" => [
-            { "name" => "all", "jobs" => [] }
+            { "name" => "all", "jobs" => ["job-to-add"] }
           ],
           "resources" => [],
           "jobs" => [
