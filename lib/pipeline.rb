@@ -2,38 +2,24 @@ require 'yaml'
 
 class Pipeline
   def initialize
-    @pipeline = [
-      { 
-        "groups" => [
-          {
-            "name" => "all",
-            "jobs" => Array.new
-          }
-        ]
-      },
-      {
-        "resources" => Array.new
-      },
-      {
-        "jobs" => Array.new
-      }
-    ]
+    @pipeline = {
+      "groups" => [
+        {
+          "name" => "all",
+          "jobs" => []
+        }
+      ],
+      "resources" => [],
+      "jobs" => []
+    }
   end
 
   def add_resource(resource)
-    @pipeline.each do |section|
-      if section["resources"]
-        section["resources"] << resource
-      end
-    end
+    @pipeline["resources"] << resource
   end
 
   def add_job(job)
-    @pipeline.each do |section|
-      if section["jobs"]
-        section["jobs"] << job
-      end
-    end
+    @pipeline["jobs"] << job
   end
 
   def finalize

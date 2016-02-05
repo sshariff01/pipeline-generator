@@ -22,7 +22,15 @@ describe Pipeline do
 
   context "when initializing a new pipeline" do
     it "successfully generates a skeleton for the pipeline" do
-      expect(pipeline.get_hash).to eq([{"groups"=>[{"name"=>"all", "jobs"=>Array.new}]}, {"resources"=>Array.new}, {"jobs"=>Array.new}])
+      expect(pipeline.get_hash).to eq(
+        {
+          "groups" => [
+            {"name"=>"all", "jobs"=>[]}
+          ],
+          "resources" => [],
+          "jobs"=>[]
+        }
+      )
     end
   end
 
@@ -32,20 +40,17 @@ describe Pipeline do
 
       pipeline.add_resource(resource.get_hash)
 
-      expect(pipeline.get_hash).to eq([
+      expect(pipeline.get_hash).to eq(
         {
           "groups" => [
-            {"name" => "all", "jobs" => Array.new}
-          ]
-        },
-        {
+            {"name" => "all", "jobs" => []}
+          ],
           "resources" => [
             {"name" => "resource-to-add", "trigger" => true}
-          ]
-        }, {
-          "jobs" => Array.new
+          ],
+          "jobs" => []
         }
-      ])
+      )
     end
 
     it "successfully adds a new job" do
@@ -54,16 +59,12 @@ describe Pipeline do
 
       pipeline.add_job(job.get_hash)
 
-      expect(pipeline.get_hash).to eq([
+      expect(pipeline.get_hash).to eq(
         {
           "groups" => [
-            { "name" => "all", "jobs" => Array.new }
-          ]
-        },
-        {
-          "resources" => Array.new
-        },
-        { 
+            { "name" => "all", "jobs" => [] }
+          ],
+          "resources" => [],
           "jobs" => [
             {
               "name" => "job-to-add",
@@ -87,7 +88,7 @@ describe Pipeline do
             }
           ]
         }
-      ])
+      )
     end
   end
 
@@ -97,6 +98,6 @@ describe Pipeline do
 
     pipeline.finalize
 
-    expect(file.string).to eq("---\n- groups:\n  - name: all\n    jobs: []\n- resources: []\n- jobs: []\n")
+    expect(file.string).to eq("---\ngroups:\n- name: all\n  jobs: []\nresources: []\njobs: []\n")
   end
 end
