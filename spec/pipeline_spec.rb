@@ -38,7 +38,7 @@ describe Pipeline do
     it "successfully adds a new resource" do
       allow(resource).to receive(:get_hash) { resource_hash }
 
-      pipeline.add_resource(resource.get_hash)
+      pipeline.add_resource(resource)
 
       expect(pipeline.get_hash).to eq(
         {
@@ -57,7 +57,7 @@ describe Pipeline do
       allow(plan).to receive(:get_hash) { plan_hash }
       allow(job).to receive(:get_hash) { job_hash }
 
-      pipeline.add_job(job.get_hash)
+      pipeline.add_job(job)
 
       expect(pipeline.get_hash).to eq(
         {
@@ -95,6 +95,7 @@ describe Pipeline do
   it "successfully writes the pipeline to output stream in YAML" do
     file = StringIO.new
     allow(File).to receive(:open) { file }
+    allow(pipeline).to receive(:output_file_contents)
 
     pipeline.finalize
 
