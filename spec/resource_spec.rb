@@ -32,18 +32,20 @@ describe Pipeline::Resource do
     it "fails to generate the configuration for a resource when no name is provided" do
       expect{resource.configure("", type, source)}.to raise_error(Pipeline::Resource::BadResourceConfigError)
     end
+  end
 
-    it "fails to generate the configuration for a resource when no type is provided" do
-      expect{resource.configure(name, "", source)}.to raise_error(Pipeline::Resource::BadResourceConfigError)
-    end
+  context "when defining a resource's source" do
+    it "successfully defines the source with any number of key-value pairs" do
+      resource.configure(name, type, "")
+      resource.add_source_param("first-param", "first-val")
+      resource.add_source_param("second-param", "second-val")
 
-    it "fails to generate the configuration for a resource when no source is provided" do
-      expect{resource.configure(name, type, "")}.to raise_error(Pipeline::Resource::BadResourceConfigError)
-    end
-
-    it "fails to generate the configuration for a resource when source is provided as empty hash" do
-      expect{resource.configure(name, type, {})}.to raise_error(Pipeline::Resource::BadResourceConfigError)
+      expect(resource.get_hash["source"]).to eq(
+        {
+          "first-param" => "first-val",
+          "second-param" => "second-val"
+        }
+      )
     end
   end
 end
-
