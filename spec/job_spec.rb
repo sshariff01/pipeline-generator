@@ -3,7 +3,7 @@ require 'rspec'
 require 'job'
 
 describe Pipeline::Job do
-  subject(:job) { Pipeline::Job.new(job_name, plan.get_hash) }
+  subject(:job) { Pipeline::Job.new(job_name, plan) }
   let(:job_name) { 'job-name' }
   let(:plan) { double("plan") }
   let(:valid_plan) {

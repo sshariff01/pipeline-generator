@@ -5,7 +5,7 @@ class Pipeline
     def initialize(name, plan)
       @job = {
         "name" => name,
-        "plan" => plan
+        "plan" => plan.get_hash
       }
     end
 
